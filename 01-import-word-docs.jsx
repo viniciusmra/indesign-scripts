@@ -2,6 +2,7 @@
     Autor: Vinicius Alves - viniciusmra@gmail.com
     Data: 2021
     Última atualização: jun/2022
+    
     Descrição:  
     Este script tem a função de importar e linkar múltiplos arquivos do word (.doc e .docx) dentro do inDesign.
     Por padrão os documentos são importados, cada uma e uma página e depois linkados uns aos outros.
