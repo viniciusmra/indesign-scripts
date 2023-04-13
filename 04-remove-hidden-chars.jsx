@@ -15,6 +15,10 @@
 
     OBS: Talvez seja preciso rodar o script mais de uma vez
 
+    UPDATE 12/04/2023
+    As funções de substituição fora alteradas para aplicar modificações apenas no documento ativo no momento.
+    Antes todo so documentos que estavam abertos no indesign sofriam alteração.
+
 */
 
 //Limpa as preferências do Grep
@@ -103,7 +107,7 @@ function changeGREP(find, change, applyChange){
     app.findGrepPreferences.findWhat = find; //procura
     if(applyChange){
         app.changeGrepPreferences.changeTo = change; // substitui
-        app.changeGrep(); //conclui a substituição
+        app.activeDocument.changeGrep(); //conclui a substituição
     } else{
         return app.activeDocument.findGrep().length
     }
@@ -113,7 +117,7 @@ function changeText(find, change, applyChange){
     app.findTextPreferences.findWhat = find; //procura
     if(applyChange){
         app.changeTextPreferences.changeTo = change; //substitui
-        app.changeText(); //conclui a substituição
+        app.activeDocument.changeText(); //conclui a substituição
     } else {
         return app.activeDocument.findText().length
     }
