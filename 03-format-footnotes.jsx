@@ -39,7 +39,7 @@ function dialog1(){
 	// Função chamda toda vez que algum estilo é selecionado
 	// Caso o estilo selecionado seja diferente do primeiro (No Paragraph Style), habilida to botão de aplicar estilo
 	dropList.onChange = function(){
-		if(dropList.selection != 0){
+		if(dropList.selection != 0 && numFootnotes > 0){
 			applyButton.enabled = true;
 		} else{
 			applyButton.enabled = false;

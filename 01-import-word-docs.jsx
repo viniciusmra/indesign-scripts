@@ -54,6 +54,7 @@ dropdownList.selection = nPages-1;
 //CheckBox
 var checkBox = myWindow.add ("checkbox", undefined, "Fazer \"autoFlow\"");
 checkBox.alignment = "left";
+checkBox.value = true;
 
 // Grupo 4
 var group4 = myWindow.add('group {alignment:["center","fill"]}')
