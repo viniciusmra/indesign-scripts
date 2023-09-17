@@ -1,3 +1,4 @@
+
 currentDoc = app.activeDocument;
 selection = currentDoc.selection[0]
 selectionPage = currentDoc.selection[0].parentTextFrames[0].parentPage.name
@@ -5,6 +6,7 @@ selectionPage = currentDoc.selection[0].parentTextFrames[0].parentPage.name
 xRefFormat = app.activeDocument.crossReferenceFormats.item(8)
 
 word = selection.contents;
+//alert(word)
 if(word !== ""){
     destinationList = findText(word);
     //alert(destinationList)
@@ -31,9 +33,6 @@ if(word !== ""){
     charStyle(sourceList);
     sourceList = findText("<ViniIndiceTag>");
 
-
-
-
     previusPage = 0;
     sourceIndex = 0
     removeHyperlinkAnchor(word);
@@ -52,7 +51,7 @@ if(word !== ""){
             myHypDest = currentDoc.hyperlinkTextDestinations.itemByName("IR_" + word + "_" + currentPage);
             if (myHypDest.isValid) {
                 myHyperLink = currentDoc.hyperlinks.add(mySource, myHypDest);
-                myHyperLink.visible = true;
+                myHyperLink.visible = false;
                 myHyperLink.name = "IR_" + word + "_" + currentPage;
             }
         }

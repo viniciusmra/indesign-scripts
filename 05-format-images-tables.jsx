@@ -1,3 +1,15 @@
+/*
+    Autor: Vinicius Alves - viniciusmra@gmail.com
+    Data: 2022
+    Última atualização: abr/2023
+    
+	Descrição:
+	Aplica estilo de objeto as imagens e estilo de tabela para as tabelas
+*/
+
+
+
+
 //@include showProps.jsx
 var currentDoc = app.activeDocument;
 
@@ -95,6 +107,7 @@ function createDialog(){
                 // Pega os valores das coordenadas do frame de texto da página [y1, x1, y2, x2]
                 frameLocation = pages[imagePage].textFrames[0].geometricBounds
                 frameWidth = frameLocation[3] - frameLocation[1];
+                frameHeight = frameLocation[2] - frameLocation[0]
                 frameX = frameLocation[1];
                 
                 // Pega os valores das coordenadas do frame de texto da página [y1, x1, y2, x2]
@@ -106,6 +119,7 @@ function createDialog(){
                 
                 // Se a imagem tiver a altura maior que a largura, a altura dela será limitada à largura
                 // do TextFrame, evitando que uma imagem não caiba no frame
+                /*
                 if(imageRatio > 1){ 
                     imageNewHeight = frameWidth;
                     imageNewWidth = imageNewHeight/imageRatio;
@@ -115,7 +129,10 @@ function createDialog(){
                     imageNewWidth = frameWidth
                     imageNewHeight = imageNewWidth*imageRatio // Calcula a nova altura da imagem baseada na proporção
                     imageX = frameX
-                }
+                }*/
+                imageNewHeight = Math.min(frameHeight/2, (frameWidth/2)*imageRatio)
+                imageNewWidth = Math.min(frameWidth/2, (frameHeight/2)/imageRatio)
+                imageX = (frameWidth - imageNewWidth)/2
                 images[i].geometricBounds = [imageLocation[0], imageX, imageLocation[0] + imageNewHeight, imageX + imageNewWidth]; 
                 images[i].fit(FitOptions.FRAME_TO_CONTENT); // Ajusta o Frame da imagem a ela mesma
             
@@ -134,7 +151,6 @@ function createDialog(){
                     tables[j].width = frameWidth;
                     if(tables[j].rows.length > 1){
                         if(tables[j].rows[0].rowType == RowTypes.BODY_ROW){
-                            alert(i)
                             tables[j].rows[0].rowType = RowTypes.HEADER_ROW;
                         }
                         tables[j].appliedTableStyle = app.activeDocument.tableStyles.item(myDropdown2.selection.text);
