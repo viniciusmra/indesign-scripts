@@ -7,6 +7,8 @@ var currentPageIndex = 0;
 var currentTextFrameIndex = 0;
 var currentParagraphIndex = 0;
 
+var maxNumberOfStyles = 34;
+
 try{
     //getSelection();
     //showProps(pages[currentPageIndex].textFrames[currentTextFrameIndex].paragraphs[currentParagraphIndex])
@@ -71,7 +73,11 @@ function palette1(){
     var shortcutEditTexts = [];
     var shortcuts = [];
     for(var i = 0; i < paragraphStylesNames.length; i++){
-        if(i < (paragraphStylesNames.length)/2){
+        if(i > maxNumberOfStyles){
+            break
+        }
+
+        if(i < (maxNumberOfStyles)/2){
             var group3_1_1 = group3_1.add('group {alignment:["center","fill"]}')
             group3_1_1.orientation = "row";
             shortcutEditTexts.push(group3_1_1.add("edittext" , [0,0,20,24] , ""));
