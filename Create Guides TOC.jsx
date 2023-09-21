@@ -49,6 +49,7 @@ addButton.onClick = function () {
     selectedParagraphID.push(paragraphStylesID[myDropdown.selection.index])
 }
 
+
 if(myWindow.show() == 1){
     if(selectedParagraphID.length > 0){
         if(checkBox.value == 1){
@@ -62,12 +63,11 @@ if(myWindow.show() == 1){
             app.findTextPreferences.appliedParagraphStyle = currentDoc.paragraphStyles.itemByID(selectedParagraphID[i]);
             markerList = currentDoc.findText();
             for(j = 0; j < markerList.length; j++){
-                for(k = 0; k < markerList[j].paragraphs.length; k++){
-                    //createGuides(markerList[j].paragraphs[k])
-
-                    guidesLocations.push((markerList[j].paragraphs[k].characters[0].baseline - getHeight(markerList[j].paragraphs[k].characters[0])))
-                    guidesPages.push(markerList[j].paragraphs[k].parentTextFrames[0].parentPage.name)
-                }
+                // Essa parte basicamente faz uma busca pelos parágrafos que o usuário selecionou (espersa-se que ele selecione os parágrafos dos titulos da TOC)
+                // então são geradas duas listas: uma com a localização (em pt) do começo desses titulos
+                // e outra com as páginas desses títulos 
+                guidesLocations.push((markerList[j].paragraphs[0].characters[0].baseline - getHeight(markerList[j].paragraphs[0].characters[0])))
+                guidesPages.push(markerList[j].paragraphs[0].parentTextFrames[0].parentPage.name)
             }
         }
     }
@@ -76,6 +76,7 @@ if(myWindow.show() == 1){
 }
 //asd = guidesPage.sort(function (a, b) {  return a - b;  });
 alert_scroll("Object properties", guidesPages);
+alert_scroll("bvlalssdf", guidesLocations)
 createGuides(guidesLocations,guidesPages)
 
 function getHeight(ch){
@@ -109,7 +110,7 @@ function alert_scroll (title, input){
         input = input.join ("\r");
     var w = new Window ("dialog", title);
     var list = w.add ("edittext", undefined, input, {multiline: true, scrolling: true});
-    list.maximumSize.height = w.maximumSize.height-100;
+    list.maximumSize.height = w.maximumSize.height/2;
     list.minimumSize.width = 250;
     w.add ("button", undefined, "Close", {name: "ok"});
     w.show ();
@@ -118,8 +119,8 @@ function alert_scroll (title, input){
  // display properties
 
 function createGuides(locations, pages){
+    // Retira as páginas duplicadas na lista de páginas
     var uniquePages = checkUnique(pages)
-
     var sortLocations = []
 
     for(i = 0; i < uniquePages.length; i++){
@@ -135,7 +136,8 @@ function createGuides(locations, pages){
         }
     }
 
-    addGuides(sortLocations)
+    //addGuides(sortLocations)
+    addGuides(locations, pages)
 
 }
 
@@ -159,8 +161,20 @@ function checkUnique(arr){
     return unique;
 }
 
-function addGuides(loc){
+function addGuides(loc, pages){
     selectedParagraphs = currentDoc.selection[0].paragraphs;
+    selectedParagraphsPage = currentDoc.selection[0].paragraphs[0].parentTextFrames[0].parentPage.name
+
+    // Pegar apenas as localizações que estão na presente página
+    newLoc = []
+    for( i = 0; i < loc.length; i++){
+        if(pages[i] == selectedParagraphsPage){
+            newLoc.push(loc[i])
+        }
+    }
+
+    alert(newLoc)
+
     //alert(currentDoc.selection[0].characters.length)
     //alert_scroll("Object properties", currentDoc.selection[0].characters[0].contents.reflect.properties.sort());
     wordHeight = getHeight(currentDoc.selection[0].characters[0])
@@ -171,14 +185,43 @@ function addGuides(loc){
     }
 
     for(i = 1; i < selectedParagraphs.length; i++){
-        //if(i != 8){
-            if(loc[i-1] - (selectedParagraphs[i].characters[0].baseline - wordHeight) < 0){
-                alert("NUMERO NEGATIVO")
-            }
-            var a = loc[i-1]
-            var b = (selectedParagraphs[i].characters[0].baseline - wordHeight)
-            selectedParagraphs[i-1].sameParaStyleSpacing = a-b
-            //alert(a-b)
-       //}
+        var a = newLoc[i-1]
+        var b = (selectedParagraphs[i].characters[0].baseline - wordHeight)
+
+        if(a - b < 0){
+            alert("NUMERO NEGATIVO: " + a + " ---- " + b)
+            continue
+        }
+
+        selectedParagraphs[i-1].sameParaStyleSpacing = a-b
     }
+
+    // O que essa parte faz é pegar quais paragrafos estão selecionados (no caso os numeros da TOC)
+    // Verifica em que página eles estão (espera-se que numeros de so uma página estejam selecionados)
+    // Verifica o tamanho e a posição desses numeros
+    // Calcula qual o ajuste que deve ser feito no numero anterior, para que o numero atual fique na posição certa
+    // Esse ajuste é então passado para o parametro 
+
+
+    // //alert(currentDoc.selection[0].characters.length)
+    // //alert_scroll("Object properties", currentDoc.selection[0].characters[0].contents.reflect.properties.sort());
+    // wordHeight = getHeight(currentDoc.selection[0].characters[0])
+    
+    // // Zera todos os espaçamentos
+    // for(i = 0; i < selectedParagraphs.length; i++){
+    //     selectedParagraphs[i].sameParaStyleSpacing = 0
+    // }
+
+    // for(i = 1; i < selectedParagraphs.length; i++){
+    //     //if(i != 8){
+    //         if(loc[i-1] - (selectedParagraphs[i].characters[0].baseline - wordHeight) < 0){
+    //             alert("NUMERO NEGATIVO: " + loc[i-1] + " ---- " + (selectedParagraphs[i].characters[0].baseline - wordHeight))
+    //             continue
+    //         }
+    //         var a = loc[i-1]
+    //         var b = (selectedParagraphs[i].characters[0].baseline - wordHeight)
+    //         selectedParagraphs[i-1].sameParaStyleSpacing = a-b
+    //         //alert(a-b)
+    //    //}
+    // }
 }

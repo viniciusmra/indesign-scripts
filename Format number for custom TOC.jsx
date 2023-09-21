@@ -3,7 +3,7 @@
 // To do: mudar essa parte pra achar os títulos mais facilmente
 var tittleStyle;
 //tittleStyle = app.activeDocument.paragraphStyleGroups.item(1).paragraphStyles.item(0);
-#include "showProps.jsx"
+#include "showProps.jsx";
 var xRef = app.documents[0].hyperlinks[0];
 for (p in xRef) {
     $.writeln(p + ": " + xRef);
